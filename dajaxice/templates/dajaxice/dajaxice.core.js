@@ -34,7 +34,12 @@ var Dajaxice = {
         if('error_callback' in custom_settings && typeof(custom_settings['error_callback']) == 'function'){
             error_callback = custom_settings['error_callback'];
         }
-
+        if('lang' in custom_settings){
+            lang = custom_settings['lang'];
+        }
+        else{
+            lang = '';
+        }
         var send_data = 'argv='+encodeURIComponent(JSON.stringify(argv)),
             oXMLHttpRequest = new XMLHttpRequest,
             endpoint = '{% url 'dajaxice-endpoint' %}'+dajaxice_function+'/';
@@ -43,6 +48,9 @@ var Dajaxice = {
             endpoint = endpoint + '?' + send_data;
         }
         oXMLHttpRequest.open(method, endpoint);
+        if (lang){
+            oXMLHttpRequest.setRequestHeader("Content-Language", lang);
+        }
         oXMLHttpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         oXMLHttpRequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         oXMLHttpRequest.setRequestHeader("X-CSRFToken", Dajaxice.get_cookie('{{ dajaxice_config.django_settings.CSRF_COOKIE_NAME }}'));
